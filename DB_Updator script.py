@@ -28,8 +28,13 @@ retval = p.wait()
 
 if se_hash!=k:
 
+	
+	os.remove('commit-hash')
+	file=codecs.open('commit-hash','w')
+	file.write(se_hash)
+	file.close	
 
-
+	
 	GITHUB_REPOS_API_BASE_URL = 'https://api.github.com/repos/'
 
 	def write_file(item, dir_name):
@@ -79,8 +84,9 @@ if se_hash!=k:
 		__tablename__ = 'VulnExp'
 		Title = Column(String, primary_key=True)
 		Desc = Column(String)
+		Category=Column(String)
 
-	engine = create_engine('sqlite:///owtf.db')
+	engine = create_engine('sqlite:///VulnExp.db')
 	session = sessionmaker()
 	session.configure(bind = engine)
 	ExpBase.metadata.create_all(engine)
@@ -96,15 +102,17 @@ if se_hash!=k:
 		i=1
 		tect=inp.readlines()
 		for line in tect:
-			if i==3:
-	 	        	titler=line.strip()
-		        if i>=5:
-		        	texto+=line
+			if i==2:
+				lock=line.strip()
+			if i==7:
+ 	        		titler=line.strip()
+	        	if i>=9:
+	        		texto+=line
 			i=i+1
 
 		vuln = {'Title': titler, 'Desc':texto }
-		vuln_desc = json.dumps(vuln)
-	    	obj = VulnExp(Title = vuln['Title'],Desc=vuln_desc)
+		vuln_desc = json.dumps(texto)
+	    	obj = VulnExp(Title = vuln['Title'],Desc=vuln_desc,Category=lock)
 		s.add(obj)
 		s.commit()
 		text=""

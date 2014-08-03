@@ -4,27 +4,26 @@ import json
 import codecs
 import re
 import sys
+from Mapping_Manager import category
+
 
 def GetExp(plugin_code):
-    engine = create_engine('sqlite:///owtf.db')
+    engine = create_engine('sqlite:///VulnExp.db')
     connection = engine.connect()
 
+    plugin_category = category(plugin_code)	
 
-    titles="Title: C-Based Toolchain Hardening"
-    args = dict(enumerate(sys.argv))
-    titles=args[1]
-
-    query = "SELECT exp FROM db WHERE Title ='" + titles + "'"
+    query = "SELECT Desc FROM VulnExp WHERE Category ='" + plugin_category + "'"
     result = connection.execute(query)
 
     rendered = ""
 
     for row in result:
-    	rendered += row['exp']
+    	rendered += row['Desc']
 
     jsoner=json.loads(rendered)
 
 
     html = markdown.markdown(jsoner)
-    #output_file.write(html)
-    connection.close()
+
+    return html

@@ -21,7 +21,7 @@ class descriptions(VulnBase):
 	Desc = Column(String)
 	Category=Column(String)
 
-engine = create_engine('sqlite:///owtf.db')
+engine = create_engine('sqlite:///VulnExp.db')
 session = sessionmaker()
 session.configure(bind = engine)
 VulnBase.metadata.create_all(engine)
@@ -45,7 +45,7 @@ for file in glob.glob("*.md"):
 	        	texto+=line
 		i=i+1
 		vuln = {'Title': titler, 'Description':texto }
-	vuln_desc = json.dumps(vuln)
+	vuln_desc = json.dumps(texto)
     	obj = descriptions(Title = vuln['Title'],Desc=vuln_desc,Category=lock)
 	s.add(obj)
 	s.commit()
